@@ -75,7 +75,7 @@ jobs:
   ssh:
     runs-on: ubuntu-latest
     steps:
-      - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < before.sh
-      - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < download.sh
-      - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < db-install.sh
-      - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < tomcat-install.sh
+      - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@51.250.4.112 < before.sh
+      - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@51.250.4.112 < download.sh
+      - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@51.250.4.112 < db-install.sh
+      - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@51.250.4.112 < tomcat-install.sh
