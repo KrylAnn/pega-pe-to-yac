@@ -29,19 +29,6 @@ jobs:
       - name: Generate new key pair if not exist
         run: "[ -f $SSH_KEY ] || ssh-keygen -b 2048 -t rsa -f $SSH_KEY -q -N \"\""
 
-      - name: Create Yandex.Cloud compute instance
-        run: |
-          ~/yandex-cloud/bin/yc \
-            --token ${{ secrets.YC_TOKEN }} --cloud-id ${{ secrets.YC_CLOUD_ID }} --folder-id ${{ secrets.YC_FOLDER_ID }} \
-            compute instance create \
-            --name $INSTANCE_NAME \
-            --zone ru-central1-a \
-            --public-ip \
-            --create-boot-disk size=30G,image-folder-id=standard-images,image-family=centos-stream-8 \
-            --preemptible \
-            --core-fraction 50 \
-            --memory 8 \
-            --ssh-key $SSH_KEY.pub
       
       - name: Show existing compute instances again
         run: ~/yandex-cloud/bin/yc --token ${{ secrets.YC_TOKEN }} --cloud-id ${{ secrets.YC_CLOUD_ID }} --folder-id ${{ secrets.YC_FOLDER_ID }} compute instance list
@@ -72,21 +59,6 @@ jobs:
       - run: echo ./dl-cloud-mail-ru.sh ${{ secrets.LINK_DUMP2 }} pega.002 >> download.sh
       - run: echo ./dl-cloud-mail-ru.sh ${{ secrets.LINK_DUMP3 }} pega.crc >> download.sh
       - run: echo exit >> download.sh
-  ssh:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Show existing compute instances again
-        run: ~/yandex-cloud/bin/yc --token ${{ secrets.YC_TOKEN }} --cloud-id ${{ secrets.YC_CLOUD_ID }} --folder-id ${{ secrets.YC_FOLDER_ID }} compute instance list
-      
-      - name: Print new vm config to file
-        run: |
-          ~/yandex-cloud/bin/yc \
-            --token ${{ secrets.YC_TOKEN }} --cloud-id ${{ secrets.YC_CLOUD_ID }} --folder-id ${{ secrets.YC_FOLDER_ID }} \
-            compute instance get $INSTANCE_NAME > cache/vmconfig.txt
-        
-      - name: Save address to cache
-        run: "cat cache/vmconfig.txt | grep -v 'address: 10'  | grep ' address:' | tr -d ' address:' > cache/addr"
-        
       - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < before.sh
       - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < download.sh
       - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < db-install.sh
