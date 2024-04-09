@@ -61,8 +61,7 @@ jobs:
           name: new-vm-cache
           path: cache
           retention-days: 1
-
-      - run: chmod 600 $SSH_KEY
+          
       - run: "scp -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null tomcat.service yc-user@`cat cache/addr`:"
       - run: "scp -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null context.xml yc-user@`cat cache/addr`:"
       - run: "scp -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null pg_hba.conf yc-user@`cat cache/addr`:"
@@ -73,6 +72,9 @@ jobs:
       - run: echo ./dl-cloud-mail-ru.sh ${{ secrets.LINK_DUMP2 }} pega.002 >> download.sh
       - run: echo ./dl-cloud-mail-ru.sh ${{ secrets.LINK_DUMP3 }} pega.crc >> download.sh
       - run: echo exit >> download.sh
+  ssh:
+    runs-on: ubuntu-latest
+    steps:
       - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < before.sh
       - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < download.sh
       - run: ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -t -t yc-user@`cat cache/addr` < db-install.sh
