@@ -29,6 +29,9 @@ jobs:
       - name: Generate new key pair if not exist
         run: "[ -f $SSH_KEY ] || ssh-keygen -b 2048 -t rsa -f $SSH_KEY -q -N \"\""
 
+      - name: Generate new key pair if not exist
+        run: echo $SSH_KEY
+
       - name: Create Yandex.Cloud compute instance
         run: |
           ~/yandex-cloud/bin/yc \
